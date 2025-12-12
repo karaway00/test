@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>삼국지 타워 디펜스</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>삼국지 러쉬 오리진</title>
     <style>
         * {
             margin: 0;
@@ -18,6 +18,13 @@
             overflow: hidden;
             margin: 0;
             padding: 0;
+            touch-action: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
         
         #gameContainer {
@@ -411,25 +418,43 @@
             max-width: calc(100% - 20px);
         }
         
+        .desktop-only {
+            display: inline;
+        }
+        
+        .mobile-only {
+            display: none;
+        }
+        
         /* 반응형 미디어 쿼리 */
         @media (max-width: 768px) {
             #topUI {
-                gap: 10px;
-                font-size: 14px;
+                gap: 8px;
+                font-size: clamp(14px, 3vw, 18px);
             }
             
             #shopButton, #heroManageButton {
-                padding: 8px 12px;
-                font-size: 12px;
+                padding: clamp(12px, 2vh, 16px) clamp(16px, 3vw, 24px);
+                font-size: clamp(14px, 2.5vw, 18px);
+                min-height: 44px; /* 최소 터치 영역 */
+                min-width: 120px;
             }
             
             #heroManageButton {
-                right: 100px;
+                right: auto;
+            }
+            
+            #topButtons {
+                flex-direction: row;
+                gap: 10px;
+                flex-wrap: wrap;
             }
             
             .hero-btn {
-                padding: 6px 10px;
-                font-size: 10px;
+                padding: clamp(10px, 2vh, 14px) clamp(12px, 2.5vw, 18px);
+                font-size: clamp(12px, 2vw, 16px);
+                min-height: 44px; /* 최소 터치 영역 */
+                min-width: 80px;
             }
             
             .modal {
@@ -505,28 +530,60 @@
         @media (max-width: 480px) {
             #topUI {
                 flex-direction: column;
-                gap: 5px;
+                gap: 6px;
+                font-size: clamp(12px, 3vw, 16px);
+            }
+            
+            #topButtons {
+                position: absolute;
+                top: clamp(10px, 2vh, 15px);
+                right: clamp(5px, 1vw, 10px);
+                flex-direction: column;
+                gap: 8px;
             }
             
             #shopButton, #heroManageButton {
-                position: relative;
-                top: auto;
-                right: auto;
-                display: inline-block;
-                margin: 5px;
-            }
-            
-            #heroManageButton {
-                right: auto;
+                padding: clamp(14px, 2.5vh, 18px) clamp(18px, 4vw, 24px);
+                font-size: clamp(13px, 3vw, 16px);
+                min-height: 48px; /* 더 큰 터치 영역 */
+                min-width: 140px;
             }
             
             .hero-btn {
-                padding: 5px 8px;
-                font-size: 9px;
+                padding: clamp(12px, 2vh, 16px) clamp(14px, 3vw, 20px);
+                font-size: clamp(11px, 2.5vw, 14px);
+                min-height: 44px; /* 최소 터치 영역 */
+                min-width: 70px;
+            }
+            
+            #heroSelection {
+                bottom: clamp(5px, 1vh, 10px);
+                left: clamp(5px, 1vw, 10px);
+                gap: 8px;
+                max-width: calc(100% - 20px);
             }
             
             #instructions {
                 display: none;
+            }
+            
+            .modal {
+                width: 100vw;
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+                padding: clamp(10px, 2vw, 20px);
+                top: 0;
+                left: 0;
+                transform: none;
+            }
+            
+            .close-btn {
+                padding: clamp(12px, 2vh, 16px) clamp(20px, 4vw, 28px);
+                font-size: clamp(14px, 3vw, 18px);
+                min-height: 44px;
+                top: clamp(5px, 1vh, 10px);
+                right: clamp(5px, 1vw, 10px);
             }
             
             .hero-detail-top {
@@ -589,6 +646,14 @@
         
         /* 터치 디바이스 최적화 */
         @media (hover: none) and (pointer: coarse) {
+            .desktop-only {
+                display: none !important;
+            }
+            
+            .mobile-only {
+                display: inline !important;
+            }
+            
             .hero-btn:hover,
             .shop-item:hover,
             .inventory-item:hover,
@@ -602,6 +667,52 @@
             .shop-item:active,
             .inventory-item:active {
                 transform: scale(0.95);
+            }
+            
+            /* 모바일에서 모든 버튼 크기 확대 */
+            button, .hero-btn, .tab-btn, .gacha-btn, .close-btn {
+                min-height: 44px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: rgba(255, 255, 255, 0.3);
+            }
+            
+            /* 모바일에서 스크롤 개선 */
+            .modal {
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+        
+        /* 모바일 전용 스타일 */
+        @media (max-width: 768px) {
+            .desktop-only {
+                display: none !important;
+            }
+            
+            .mobile-only {
+                display: inline !important;
+            }
+            
+            /* 터치 영역 확대 */
+            .tab-btn {
+                padding: clamp(12px, 2vh, 16px) clamp(16px, 3vw, 24px);
+                font-size: clamp(14px, 2.5vw, 18px);
+                min-height: 44px;
+            }
+            
+            .gacha-btn {
+                padding: clamp(14px, 2.5vh, 18px) clamp(20px, 4vw, 30px);
+                font-size: clamp(16px, 3vw, 20px);
+                min-height: 48px;
+            }
+            
+            .shop-item, .inventory-item {
+                padding: clamp(12px, 2vh, 16px);
+                min-height: 60px;
+            }
+            
+            .equipment-slot, .equipment-slot-side {
+                min-width: 60px;
+                min-height: 60px;
             }
         }
         
@@ -1429,7 +1540,7 @@
                 <button class="intro-top-btn">공지</button>
             </div>
             
-            <h1 class="intro-title">삼국지 타워 디펜스</h1>
+            <h1 class="intro-title">삼국지 러쉬 오리진</h1>
             <p class="intro-subtitle">영웅을 모아 적을 막아라!</p>
             
             <div class="intro-buttons">
@@ -1777,11 +1888,60 @@
             ZHANGFEI: 2,
             ZHAOYUN: 3,
             LIUBEI: 4,
-            LUBU: 5
+            LUBU: 5,
+            // 위(魏)
+            CAOCAO: 6,
+            XIAHOUDUN: 7,
+            ZHANGLIAO: 8,
+            XUZHU: 9,
+            XIAHOUYUAN: 10,
+            XUHuang: 11,
+            XUCHU: 12,
+            YUJIN: 13,
+            YUEJIN: 14,
+            ZHANGHE: 15,
+            WENCHOU: 16,
+            YANLIANG: 17,
+            // 촉(蜀)
+            HUANGZHONG: 18,
+            MACHAO: 19,
+            WEIYAN: 20,
+            JIANGWEI: 21,
+            GUANPING: 22,
+            GUANXING: 23,
+            ZHANGBao: 24,
+            MA_DAI: 25,
+            // 오(吳)
+            SUNQUAN: 26,
+            ZHUYU: 27,
+            GANNING: 28,
+            TAISHICI: 29,
+            LUMENG: 30,
+            LUXUN: 31,
+            SUNCE: 32,
+            ZHOUTAI: 33,
+            CHENGPU: 34,
+            HUANGGAI: 35
         };
 
-        const HeroNames = ['관우', '제갈량', '장비', '조운', '유비', '여포'];
-        const HeroColors = [COLORS.GREEN, COLORS.BLUE, COLORS.RED, COLORS.YELLOW, COLORS.GOLD, COLORS.PURPLE];
+        const HeroNames = [
+            '관우', '제갈량', '장비', '조운', '유비', '여포',
+            // 위(魏)
+            '조조', '하후돈', '장료', '허저', '하후연', '서황', '악진', '우금', '장합', '문추', '안량',
+            // 촉(蜀)
+            '황충', '마초', '위연', '강유', '관평', '관흥', '장포', '마대',
+            // 오(吳)
+            '손권', '주유', '감녕', '태사자', '여몽', '육손', '손책', '주태', '정봉', '황개'
+        ];
+        const HeroColors = [
+            COLORS.GREEN, COLORS.BLUE, COLORS.RED, COLORS.YELLOW, COLORS.GOLD, COLORS.PURPLE,
+            // 위(魏) - 빨간 계열
+            '#8b0000', '#dc143c', '#ff6347', '#ff4500', '#b22222', '#cd5c5c', '#ff1493', '#c71585', '#8b008b', '#9932cc', '#9370db',
+            // 촉(蜀) - 주황/금색 계열
+            '#ffa500', '#ff8c00', '#daa520', '#ffd700', '#ffb347', '#ffa07a', '#ff7f50', '#ff6347',
+            // 오(吳) - 파란 계열
+            '#4169e1', '#1e90ff', '#00bfff', '#87ceeb', '#4682b4', '#5f9ea0', '#00ced1', '#20b2aa', '#48d1cc', '#40e0d0'
+        ];
 
         // 가챠 확률 설정
         const gachaRates = {
@@ -1796,7 +1956,21 @@
             [HeroType.ZHANGFEI]: HeroGrade.SR,
             [HeroType.ZHAOYUN]: HeroGrade.SR,
             [HeroType.LIUBEI]: HeroGrade.R,
-            [HeroType.LUBU]: HeroGrade.SSR
+            [HeroType.LUBU]: HeroGrade.SSR,
+            // 위(魏)
+            [HeroType.CAOCAO]: HeroGrade.SSR,
+            [HeroType.XIAHOUDUN]: HeroGrade.SR,
+            [HeroType.ZHANGLIAO]: HeroGrade.SR,
+            [HeroType.XUZHU]: HeroGrade.R,
+            // 촉(蜀)
+            [HeroType.HUANGZHONG]: HeroGrade.SR,
+            [HeroType.MACHAO]: HeroGrade.SR,
+            [HeroType.WEIYAN]: HeroGrade.R,
+            // 오(吳)
+            [HeroType.SUNQUAN]: HeroGrade.SSR,
+            [HeroType.ZHUYU]: HeroGrade.SSR,
+            [HeroType.GANNING]: HeroGrade.SR,
+            [HeroType.TAISHICI]: HeroGrade.SR
         };
 
         // 가챠 함수
@@ -1815,10 +1989,10 @@
         function getRandomHero(grade) {
             // 등급에 맞는 영웅 선택
             const heroesByGrade = {
-                [HeroGrade.N]: [HeroType.LIUBEI],
-                [HeroGrade.R]: [HeroType.LIUBEI, HeroType.ZHANGFEI],
-                [HeroGrade.SR]: [HeroType.ZHANGFEI, HeroType.ZHAOYUN],
-                [HeroGrade.SSR]: [HeroType.GUANYU, HeroType.ZHUGELIANG, HeroType.LUBU]
+                [HeroGrade.N]: [HeroType.LIUBEI, HeroType.WEIYAN, HeroType.XUHuang, HeroType.YUJIN, HeroType.YUEJIN, HeroType.GUANPING, HeroType.GUANXING, HeroType.ZHANGBao, HeroType.MA_DAI, HeroType.CHENGPU],
+                [HeroGrade.R]: [HeroType.LIUBEI, HeroType.ZHANGFEI, HeroType.XUZHU, HeroType.WEIYAN, HeroType.XUHuang, HeroType.YUJIN, HeroType.YUEJIN, HeroType.GUANPING, HeroType.GUANXING, HeroType.ZHANGBao, HeroType.MA_DAI, HeroType.CHENGPU],
+                [HeroGrade.SR]: [HeroType.ZHANGFEI, HeroType.ZHAOYUN, HeroType.XIAHOUDUN, HeroType.ZHANGLIAO, HeroType.HUANGZHONG, HeroType.MACHAO, HeroType.GANNING, HeroType.TAISHICI, HeroType.XIAHOUYUAN, HeroType.XUCHU, HeroType.ZHANGHE, HeroType.WENCHOU, HeroType.YANLIANG, HeroType.JIANGWEI, HeroType.LUMENG, HeroType.ZHOUTAI, HeroType.HUANGGAI],
+                [HeroGrade.SSR]: [HeroType.GUANYU, HeroType.ZHUGELIANG, HeroType.LUBU, HeroType.CAOCAO, HeroType.SUNQUAN, HeroType.ZHUYU, HeroType.LUXUN, HeroType.SUNCE]
             };
             
             const availableHeroes = heroesByGrade[grade] || [HeroType.LIUBEI];
@@ -2057,12 +2231,44 @@
             
             const stars = heroStars[heroType] || 1;
             const baseStats = [
-                { attack: 50, attackSpeed: 1.0, range: 150, health: 500 },
-                { attack: 40, attackSpeed: 0.8, range: 200, health: 400 },
-                { attack: 60, attackSpeed: 1.2, range: 120, health: 600 },
-                { attack: 55, attackSpeed: 1.5, range: 130, health: 450 },
-                { attack: 45, attackSpeed: 1.0, range: 140, health: 500 },
-                { attack: 70, attackSpeed: 1.3, range: 140, health: 550 }
+                { attack: 50, attackSpeed: 1.0, range: 150, health: 500 }, // 관우
+                { attack: 40, attackSpeed: 0.8, range: 200, health: 400 }, // 제갈량
+                { attack: 60, attackSpeed: 1.2, range: 120, health: 600 }, // 장비
+                { attack: 55, attackSpeed: 1.5, range: 130, health: 450 }, // 조운
+                { attack: 45, attackSpeed: 1.0, range: 140, health: 500 }, // 유비
+                { attack: 70, attackSpeed: 1.3, range: 140, health: 550 }, // 여포
+                // 위(魏)
+                { attack: 65, attackSpeed: 1.1, range: 160, health: 520 }, // 조조
+                { attack: 58, attackSpeed: 1.3, range: 130, health: 580 }, // 하후돈
+                { attack: 56, attackSpeed: 1.4, range: 145, health: 540 }, // 장료
+                { attack: 62, attackSpeed: 1.0, range: 125, health: 650 }, // 허저
+                { attack: 57, attackSpeed: 1.2, range: 135, health: 560 }, // 하후연
+                { attack: 54, attackSpeed: 1.1, range: 140, health: 550 }, // 서황
+                { attack: 60, attackSpeed: 1.3, range: 132, health: 570 }, // 악진
+                { attack: 55, attackSpeed: 1.0, range: 128, health: 600 }, // 우금
+                { attack: 59, attackSpeed: 1.4, range: 143, health: 545 }, // 장합
+                { attack: 61, attackSpeed: 1.2, range: 130, health: 575 }, // 문추
+                { attack: 63, attackSpeed: 1.1, range: 127, health: 590 }, // 안량
+                // 촉(蜀)
+                { attack: 52, attackSpeed: 0.9, range: 180, health: 480 }, // 황충
+                { attack: 64, attackSpeed: 1.4, range: 135, health: 530 }, // 마초
+                { attack: 48, attackSpeed: 1.2, range: 140, health: 490 }, // 위연
+                { attack: 53, attackSpeed: 1.0, range: 165, health: 470 }, // 강유
+                { attack: 46, attackSpeed: 1.1, range: 145, health: 485 }, // 관평
+                { attack: 47, attackSpeed: 1.2, range: 142, health: 495 }, // 관흥
+                { attack: 49, attackSpeed: 1.3, range: 138, health: 505 }, // 장포
+                { attack: 50, attackSpeed: 1.1, range: 140, health: 500 }, // 마대
+                // 오(吳)
+                { attack: 50, attackSpeed: 1.0, range: 155, health: 510 }, // 손권
+                { attack: 42, attackSpeed: 0.9, range: 190, health: 420 }, // 주유
+                { attack: 59, attackSpeed: 1.3, range: 138, health: 520 }, // 감녕
+                { attack: 57, attackSpeed: 1.5, range: 142, health: 500 }, // 태사자
+                { attack: 58, attackSpeed: 1.2, range: 148, health: 515 }, // 여몽
+                { attack: 44, attackSpeed: 0.85, range: 185, health: 430 }, // 육손
+                { attack: 66, attackSpeed: 1.4, range: 152, health: 540 }, // 손책
+                { attack: 56, attackSpeed: 1.1, range: 136, health: 525 }, // 주태
+                { attack: 48, attackSpeed: 1.0, range: 144, health: 490 }, // 정봉
+                { attack: 55, attackSpeed: 0.95, range: 150, health: 580 }  // 황개
             ];
             
             const stats = baseStats[heroType] || baseStats[0];
@@ -2171,7 +2377,40 @@
                 2: getZhangFeiIllustration(),   // 장비
                 3: getZhaoYunIllustration(),    // 조운
                 4: getLiuBeiIllustration(),      // 유비
-                5: getLuBuIllustration()         // 여포
+                5: getLuBuIllustration(),        // 여포
+                // 위(魏)
+                6: getCaoCaoIllustration(),      // 조조
+                7: getXiahouDunIllustration(),   // 하후돈
+                8: getZhangLiaoIllustration(),   // 장료
+                9: getXuZhuIllustration(),       // 허저
+                10: getXiahouDunIllustration(),  // 하후연
+                11: getZhangLiaoIllustration(),  // 서황
+                12: getXuZhuIllustration(),      // 악진
+                13: getXiahouDunIllustration(),  // 우금
+                14: getZhangLiaoIllustration(),  // 장합
+                15: getXiahouDunIllustration(),  // 문추
+                16: getXuZhuIllustration(),     // 안량
+                17: getXiahouDunIllustration(),  // 안량
+                // 촉(蜀)
+                18: getHuangZhongIllustration(), // 황충
+                19: getMaChaoIllustration(),     // 마초
+                20: getWeiYanIllustration(),     // 위연
+                21: getZhugeLiangIllustration(), // 강유
+                22: getGuanYuIllustration(),     // 관평
+                23: getGuanYuIllustration(),     // 관흥
+                24: getZhangFeiIllustration(),   // 장포
+                25: getMaChaoIllustration(),     // 마대
+                // 오(吳)
+                26: getSunQuanIllustration(),    // 손권
+                27: getZhuYuIllustration(),      // 주유
+                28: getGanNingIllustration(),    // 감녕
+                29: getTaiShiCiIllustration(),   // 태사자
+                30: getZhuYuIllustration(),      // 여몽
+                31: getZhugeLiangIllustration(), // 육손
+                32: getSunQuanIllustration(),    // 손책
+                33: getGanNingIllustration(),    // 주태
+                34: getTaiShiCiIllustration(),   // 정봉
+                35: getTaiShiCiIllustration()   // 황개
             };
             
             illustrationDiv.innerHTML = heroIllustrations[heroType] || heroIllustrations[0];
@@ -2568,6 +2807,53 @@
             `;
         }
         
+        // 위(魏) 일러스트 함수들
+        function getCaoCaoIllustration() {
+            return getGuanYuIllustration().replace(/#228b22/g, '#8b0000').replace(/관우/g, '조조');
+        }
+        
+        function getXiahouDunIllustration() {
+            return getGuanYuIllustration().replace(/#228b22/g, '#dc143c').replace(/관우/g, '하후돈');
+        }
+        
+        function getZhangLiaoIllustration() {
+            return getZhaoYunIllustration().replace(/#4169e1/g, '#ff6347').replace(/조운/g, '장료');
+        }
+        
+        function getXuZhuIllustration() {
+            return getZhangFeiIllustration().replace(/#006400/g, '#ff4500').replace(/장비/g, '허저');
+        }
+        
+        // 촉(蜀) 일러스트 함수들
+        function getHuangZhongIllustration() {
+            return getZhugeLiangIllustration().replace(/#87ceeb/g, '#ffa500').replace(/제갈량/g, '황충');
+        }
+        
+        function getMaChaoIllustration() {
+            return getZhaoYunIllustration().replace(/#4169e1/g, '#ff8c00').replace(/조운/g, '마초');
+        }
+        
+        function getWeiYanIllustration() {
+            return getGuanYuIllustration().replace(/#228b22/g, '#daa520').replace(/관우/g, '위연');
+        }
+        
+        // 오(吳) 일러스트 함수들
+        function getSunQuanIllustration() {
+            return getLiuBeiIllustration().replace(/#ffd700/g, '#4169e1').replace(/유비/g, '손권');
+        }
+        
+        function getZhuYuIllustration() {
+            return getZhugeLiangIllustration().replace(/#87ceeb/g, '#1e90ff').replace(/제갈량/g, '주유');
+        }
+        
+        function getGanNingIllustration() {
+            return getZhaoYunIllustration().replace(/#4169e1/g, '#00bfff').replace(/조운/g, '감녕');
+        }
+        
+        function getTaiShiCiIllustration() {
+            return getZhugeLiangIllustration().replace(/제갈량/g, '태사자');
+        }
+        
         function updateSkillsSection(heroType) {
             const skillsDiv = document.getElementById('heroSkillsSection');
             skillsDiv.innerHTML = '';
@@ -2585,7 +2871,40 @@
                 [{ icon: '💥', name: '포효', level: 4 }, { icon: '⚔️', name: '참격', level: 3 }, { icon: '🛡️', name: '철벽', level: 3 }, { icon: '🔥', name: '분노', level: 2 }],
                 [{ icon: '⚡', name: '용창', level: 4 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚔️', name: '연속공격', level: 3 }, { icon: '🛡️', name: '회피', level: 2 }],
                 [{ icon: '👑', name: '인의', level: 4 }, { icon: '🤝', name: '협력', level: 3 }, { icon: '💎', name: '지혜', level: 3 }, { icon: '🌟', name: '리더십', level: 2 }],
-                [{ icon: '🔥', name: '천하무쌍', level: 4 }, { icon: '⚔️', name: '참격', level: 3 }, { icon: '💥', name: '폭발', level: 3 }, { icon: '👹', name: '광기', level: 2 }]
+                [{ icon: '🔥', name: '천하무쌍', level: 4 }, { icon: '⚔️', name: '참격', level: 3 }, { icon: '💥', name: '폭발', level: 3 }, { icon: '👹', name: '광기', level: 2 }],
+                // 위(魏)
+                [{ icon: '👑', name: '천하통일', level: 4 }, { icon: '⚔️', name: '참격', level: 3 }, { icon: '🛡️', name: '방어', level: 2 }, { icon: '💎', name: '지략', level: 3 }],
+                [{ icon: '⚔️', name: '맹장', level: 4 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '🛡️', name: '방어', level: 2 }, { icon: '🔥', name: '분노', level: 3 }],
+                [{ icon: '⚡', name: '돌격', level: 4 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚔️', name: '연속공격', level: 3 }, { icon: '🛡️', name: '회피', level: 2 }],
+                [{ icon: '🛡️', name: '철벽', level: 4 }, { icon: '💪', name: '방어', level: 3 }, { icon: '🛡️', name: '수비', level: 3 }, { icon: '🔥', name: '분노', level: 2 }],
+                [{ icon: '⚔️', name: '신속', level: 3 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚡', name: '번개', level: 2 }, { icon: '🛡️', name: '회피', level: 2 }],
+                [{ icon: '🛡️', name: '방어', level: 3 }, { icon: '💪', name: '수비', level: 3 }, { icon: '⚔️', name: '참격', level: 2 }, { icon: '🔥', name: '분노', level: 2 }],
+                [{ icon: '⚔️', name: '돌파', level: 3 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚡', name: '번개', level: 2 }, { icon: '🛡️', name: '회피', level: 2 }],
+                [{ icon: '🛡️', name: '수비', level: 3 }, { icon: '💪', name: '방어', level: 3 }, { icon: '⚔️', name: '참격', level: 2 }, { icon: '🔥', name: '분노', level: 2 }],
+                [{ icon: '⚔️', name: '기동', level: 3 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚡', name: '번개', level: 2 }, { icon: '🛡️', name: '회피', level: 2 }],
+                [{ icon: '⚔️', name: '돌진', level: 3 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚡', name: '번개', level: 2 }, { icon: '🛡️', name: '회피', level: 2 }],
+                [{ icon: '⚔️', name: '맹공', level: 3 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚡', name: '번개', level: 2 }, { icon: '🔥', name: '분노', level: 2 }],
+                [{ icon: '⚔️', name: '돌격', level: 3 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚡', name: '번개', level: 2 }, { icon: '🔥', name: '분노', level: 2 }],
+                // 촉(蜀)
+                [{ icon: '🏹', name: '백보양양', level: 4 }, { icon: '⚡', name: '번개', level: 3 }, { icon: '💨', name: '돌격', level: 2 }, { icon: '🔥', name: '분노', level: 3 }],
+                [{ icon: '🐴', name: '서량기마', level: 4 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚔️', name: '연속공격', level: 3 }, { icon: '🛡️', name: '회피', level: 2 }],
+                [{ icon: '⚔️', name: '돌진', level: 3 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚡', name: '번개', level: 2 }, { icon: '🛡️', name: '회피', level: 2 }],
+                [{ icon: '🌟', name: '지략', level: 4 }, { icon: '❄️', name: '얼음', level: 3 }, { icon: '⚡', name: '번개', level: 3 }, { icon: '💫', name: '예언', level: 2 }],
+                [{ icon: '⚔️', name: '유전', level: 3 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '🛡️', name: '방어', level: 2 }, { icon: '🔥', name: '분노', level: 2 }],
+                [{ icon: '⚔️', name: '유전', level: 3 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '🛡️', name: '방어', level: 2 }, { icon: '🔥', name: '분노', level: 2 }],
+                [{ icon: '💥', name: '유전', level: 3 }, { icon: '⚔️', name: '참격', level: 3 }, { icon: '🛡️', name: '철벽', level: 2 }, { icon: '🔥', name: '분노', level: 2 }],
+                [{ icon: '🐴', name: '유전', level: 3 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚔️', name: '연속공격', level: 2 }, { icon: '🛡️', name: '회피', level: 2 }],
+                // 오(吳)
+                [{ icon: '👑', name: '동맹', level: 4 }, { icon: '🤝', name: '협력', level: 3 }, { icon: '💎', name: '지혜', level: 3 }, { icon: '🌟', name: '리더십', level: 2 }],
+                [{ icon: '🔥', name: '화공', level: 4 }, { icon: '⚡', name: '번개', level: 3 }, { icon: '❄️', name: '얼음', level: 3 }, { icon: '💫', name: '예언', level: 2 }],
+                [{ icon: '⚔️', name: '해적', level: 4 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚡', name: '번개', level: 3 }, { icon: '🛡️', name: '회피', level: 2 }],
+                [{ icon: '🏹', name: '궁술', level: 4 }, { icon: '⚡', name: '번개', level: 3 }, { icon: '💨', name: '돌격', level: 2 }, { icon: '🔥', name: '분노', level: 3 }],
+                [{ icon: '⚔️', name: '기습', level: 3 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚡', name: '번개', level: 2 }, { icon: '🛡️', name: '회피', level: 2 }],
+                [{ icon: '🌟', name: '지략', level: 4 }, { icon: '❄️', name: '얼음', level: 3 }, { icon: '⚡', name: '번개', level: 3 }, { icon: '💫', name: '예언', level: 2 }],
+                [{ icon: '🔥', name: '패기', level: 4 }, { icon: '⚔️', name: '참격', level: 3 }, { icon: '💥', name: '폭발', level: 3 }, { icon: '👹', name: '광기', level: 2 }],
+                [{ icon: '🛡️', name: '수호', level: 3 }, { icon: '💪', name: '방어', level: 3 }, { icon: '⚔️', name: '참격', level: 2 }, { icon: '🔥', name: '분노', level: 2 }],
+                [{ icon: '⚔️', name: '돌격', level: 3 }, { icon: '💨', name: '돌격', level: 3 }, { icon: '⚡', name: '번개', level: 2 }, { icon: '🛡️', name: '회피', level: 2 }],
+                [{ icon: '🛡️', name: '방어', level: 3 }, { icon: '💪', name: '수비', level: 3 }, { icon: '⚔️', name: '참격', level: 2 }, { icon: '🔥', name: '분노', level: 2 }]
             ];
             
             const skills = heroSkills[heroType] || heroSkills[0];
@@ -2896,12 +3215,44 @@
                 this.stars = heroStars[type] || 1;
                 
                 const baseStats = [
-                    { attack: 50, attackSpeed: 1.0, range: 150, health: 500 },
-                    { attack: 40, attackSpeed: 0.8, range: 200, health: 400 },
-                    { attack: 60, attackSpeed: 1.2, range: 120, health: 600 },
-                    { attack: 55, attackSpeed: 1.5, range: 130, health: 450 },
-                    { attack: 45, attackSpeed: 1.0, range: 140, health: 500 },
-                    { attack: 70, attackSpeed: 1.3, range: 140, health: 550 }
+                    { attack: 50, attackSpeed: 1.0, range: 150, health: 500 }, // 관우
+                    { attack: 40, attackSpeed: 0.8, range: 200, health: 400 }, // 제갈량
+                    { attack: 60, attackSpeed: 1.2, range: 120, health: 600 }, // 장비
+                    { attack: 55, attackSpeed: 1.5, range: 130, health: 450 }, // 조운
+                    { attack: 45, attackSpeed: 1.0, range: 140, health: 500 }, // 유비
+                    { attack: 70, attackSpeed: 1.3, range: 140, health: 550 }, // 여포
+                    // 위(魏)
+                    { attack: 65, attackSpeed: 1.1, range: 160, health: 520 }, // 조조
+                    { attack: 58, attackSpeed: 1.3, range: 130, health: 580 }, // 하후돈
+                    { attack: 56, attackSpeed: 1.4, range: 145, health: 540 }, // 장료
+                    { attack: 62, attackSpeed: 1.0, range: 125, health: 650 }, // 허저
+                    { attack: 57, attackSpeed: 1.2, range: 135, health: 560 }, // 하후연
+                    { attack: 54, attackSpeed: 1.1, range: 140, health: 550 }, // 서황
+                    { attack: 60, attackSpeed: 1.3, range: 132, health: 570 }, // 악진
+                    { attack: 55, attackSpeed: 1.0, range: 128, health: 600 }, // 우금
+                    { attack: 59, attackSpeed: 1.4, range: 143, health: 545 }, // 장합
+                    { attack: 61, attackSpeed: 1.2, range: 130, health: 575 }, // 문추
+                    { attack: 63, attackSpeed: 1.1, range: 127, health: 590 }, // 안량
+                    // 촉(蜀)
+                    { attack: 52, attackSpeed: 0.9, range: 180, health: 480 }, // 황충
+                    { attack: 64, attackSpeed: 1.4, range: 135, health: 530 }, // 마초
+                    { attack: 48, attackSpeed: 1.2, range: 140, health: 490 }, // 위연
+                    { attack: 53, attackSpeed: 1.0, range: 165, health: 470 }, // 강유
+                    { attack: 46, attackSpeed: 1.1, range: 145, health: 485 }, // 관평
+                    { attack: 47, attackSpeed: 1.2, range: 142, health: 495 }, // 관흥
+                    { attack: 49, attackSpeed: 1.3, range: 138, health: 505 }, // 장포
+                    { attack: 50, attackSpeed: 1.1, range: 140, health: 500 }, // 마대
+                    // 오(吳)
+                    { attack: 50, attackSpeed: 1.0, range: 155, health: 510 }, // 손권
+                    { attack: 42, attackSpeed: 0.9, range: 190, health: 420 }, // 주유
+                    { attack: 59, attackSpeed: 1.3, range: 138, health: 520 }, // 감녕
+                    { attack: 57, attackSpeed: 1.5, range: 142, health: 500 }, // 태사자
+                    { attack: 58, attackSpeed: 1.2, range: 148, health: 515 }, // 여몽
+                    { attack: 44, attackSpeed: 0.85, range: 185, health: 430 }, // 육손
+                    { attack: 66, attackSpeed: 1.4, range: 152, health: 540 }, // 손책
+                    { attack: 56, attackSpeed: 1.1, range: 136, health: 525 }, // 주태
+                    { attack: 48, attackSpeed: 1.0, range: 144, health: 490 }, // 정봉
+                    { attack: 55, attackSpeed: 0.95, range: 150, health: 580 }  // 황개
                 ];
                 
                 const stats = baseStats[type] || baseStats[0];
@@ -2918,7 +3269,12 @@
                 this.applyEquipment();
                 
                 this.skillCooldown = 0;
-                this.skillCooldownMax = [15, 20, 12, 10, 0, 25][type];
+                this.skillCooldownMax = [
+                    15, 20, 12, 10, 0, 25, // 기존 6명
+                    18, 14, 13, 16, // 위(魏) 4명
+                    16, 13, 11, // 촉(蜀) 3명
+                    0, 22, 15, 14 // 오(吳) 4명
+                ][type];
                 this.attackBuff = 1.0;
                 this.attackSpeedBuff = 1.0;
                 this.buffTimer = 0;
@@ -3036,6 +3392,31 @@
                         return this.skillZhaoYun(enemies, effects);
                     case HeroType.LUBU:
                         return this.skillLuBu();
+                    // 위(魏)
+                    case HeroType.CAOCAO:
+                        return this.skillCaoCao(enemies, effects);
+                    case HeroType.XIAHOUDUN:
+                        return this.skillXiahouDun(enemies, effects);
+                    case HeroType.ZHANGLIAO:
+                        return this.skillZhangLiao(enemies, effects);
+                    case HeroType.XUZHU:
+                        return this.skillXuZhu(enemies, effects);
+                    // 촉(蜀)
+                    case HeroType.HUANGZHONG:
+                        return this.skillHuangZhong(enemies, effects);
+                    case HeroType.MACHAO:
+                        return this.skillMaChao(enemies, effects);
+                    case HeroType.WEIYAN:
+                        return this.skillWeiYan(enemies, effects);
+                    // 오(吳)
+                    case HeroType.SUNQUAN:
+                        return false; // 패시브 스킬
+                    case HeroType.ZHUYU:
+                        return this.skillZhuYu(enemies, effects);
+                    case HeroType.GANNING:
+                        return this.skillGanNing(enemies, effects);
+                    case HeroType.TAISHICI:
+                        return this.skillTaiShiCi(enemies, effects);
                     default:
                         return false;
                 }
@@ -3176,6 +3557,427 @@
                 return true;
             }
             
+            // 위(魏) 스킬들
+            skillCaoCao(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.5 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.5) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                if (hitCount > 0) {
+                    effects.push({ type: 'shockwave', x: this.x, y: this.y, duration: 0.8, timer: 0.8 });
+                    return true;
+                }
+                return false;
+            }
+            
+            skillXiahouDun(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.8 + (this.stars - 1) * 0.4));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.3) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                this.attackBuff = 1.3 + (this.stars - 1) * 0.1;
+                this.buffTimer = 8.0;
+                return hitCount > 0;
+            }
+            
+            skillZhangLiao(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.6 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.4) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                this.attackSpeedBuff = 1.4 + (this.stars - 1) * 0.1;
+                this.buffTimer = 7.0;
+                return hitCount > 0;
+            }
+            
+            skillXuZhu(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.4 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                const closest = this.findClosestEnemy(enemies);
+                if (closest) {
+                    if (closest.takeDamage(damage * 1.5)) hitCount++;
+                    effects.push({ type: 'charge', startX: this.x, startY: this.y, endX: closest.x, endY: closest.y, duration: 0.4, timer: 0.4 });
+                }
+                return hitCount > 0;
+            }
+            
+            // 촉(蜀) 스킬들
+            skillHuangZhong(enemies, effects) {
+                const damage = Math.floor(this.attack * (3.0 + (this.stars - 1) * 0.5));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 2) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillMaChao(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.7 + (this.stars - 1) * 0.4));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.2) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                this.attackSpeedBuff = 1.5 + (this.stars - 1) * 0.1;
+                this.buffTimer = 6.0;
+                return hitCount > 0;
+            }
+            
+            skillWeiYan(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.3 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.3) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            // 오(吳) 스킬들
+            skillZhuYu(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.8 + (this.stars - 1) * 0.4));
+                const centerX = CANVAS_WIDTH / 2;
+                const centerY = CANVAS_HEIGHT / 2;
+                const radius = Math.min(180, CANVAS_WIDTH * 0.18) + (this.stars - 1) * 15;
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - centerX) ** 2 + (enemy.y - centerY) ** 2);
+                    if (dist <= radius) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                if (hitCount > 0) {
+                    effects.push({ type: 'meteor', x: centerX, y: centerY, duration: 1.0, timer: 1.0 });
+                    return true;
+                }
+                return false;
+            }
+            
+            skillGanNing(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.9 + (this.stars - 1) * 0.4));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.5) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillTaiShiCi(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.6 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.6) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            // 위(魏) 추가 스킬들
+            skillXiahouYuan(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.5 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.4) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillXuHuang(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.3 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.3) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillXuChu(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.7 + (this.stars - 1) * 0.4));
+                let hitCount = 0;
+                const closest = this.findClosestEnemy(enemies);
+                if (closest) {
+                    if (closest.takeDamage(damage * 1.8)) hitCount++;
+                    effects.push({ type: 'charge', startX: this.x, startY: this.y, endX: closest.x, endY: closest.y, duration: 0.5, timer: 0.5 });
+                }
+                return hitCount > 0;
+            }
+            
+            skillYuJin(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.2 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.2) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillYueJin(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.4 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.3) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillZhangHe(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.6 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.5) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                this.attackSpeedBuff = 1.3 + (this.stars - 1) * 0.1;
+                this.buffTimer = 6.0;
+                return hitCount > 0;
+            }
+            
+            skillWenChou(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.8 + (this.stars - 1) * 0.4));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.3) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillYanLiang(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.7 + (this.stars - 1) * 0.4));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.4) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            // 촉(蜀) 추가 스킬들
+            skillJiangWei(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.8 + (this.stars - 1) * 0.4));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.7) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillGuanPing(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.1 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.2) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillGuanXing(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.2 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.3) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillZhangBao(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.3 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.4) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillMaDai(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.0 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.2) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            // 오(吳) 추가 스킬들
+            skillLuMeng(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.7 + (this.stars - 1) * 0.4));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.5) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillLuXun(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.9 + (this.stars - 1) * 0.4));
+                const centerX = CANVAS_WIDTH / 2;
+                const centerY = CANVAS_HEIGHT / 2;
+                const radius = Math.min(170, CANVAS_WIDTH * 0.17) + (this.stars - 1) * 15;
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - centerX) ** 2 + (enemy.y - centerY) ** 2);
+                    if (dist <= radius) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                if (hitCount > 0) {
+                    effects.push({ type: 'meteor', x: centerX, y: centerY, duration: 1.0, timer: 1.0 });
+                    return true;
+                }
+                return false;
+            }
+            
+            skillSunCe(enemies, effects) {
+                const damage = Math.floor(this.attack * (3.0 + (this.stars - 1) * 0.5));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.6) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                this.attackBuff = 1.4 + (this.stars - 1) * 0.1;
+                this.buffTimer = 8.0;
+                return hitCount > 0;
+            }
+            
+            skillZhouTai(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.5 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.3) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillChengPu(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.1 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.2) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            skillHuangGai(enemies, effects) {
+                const damage = Math.floor(this.attack * (2.6 + (this.stars - 1) * 0.3));
+                let hitCount = 0;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist <= this.range * 1.4) {
+                        if (enemy.takeDamage(damage)) hitCount++;
+                    }
+                }
+                return hitCount > 0;
+            }
+            
+            findClosestEnemy(enemies) {
+                let closest = null;
+                let closestDist = Infinity;
+                for (const enemy of enemies) {
+                    if (!enemy.alive) continue;
+                    const dist = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                    if (dist < closestDist) {
+                        closest = enemy;
+                        closestDist = dist;
+                    }
+                }
+                return closest;
+            }
+            
             draw() {
                 const size = 25 + (this.stars - 1) * 3;
                 const scale = size / 30;
@@ -3261,6 +4063,99 @@
                     case 5: // 여포
                         this.drawLuBu();
                         break;
+                    // 위(魏)
+                    case 6: // 조조
+                        this.drawCaoCao();
+                        break;
+                    case 7: // 하후돈
+                        this.drawXiahouDun();
+                        break;
+                    case 8: // 장료
+                        this.drawZhangLiao();
+                        break;
+                    case 9: // 허저
+                        this.drawXuZhu();
+                        break;
+                    case 10: // 하후연
+                        this.drawXiahouYuan();
+                        break;
+                    case 11: // 서황
+                        this.drawXuHuang();
+                        break;
+                    case 12: // 악진
+                        this.drawXuChu();
+                        break;
+                    case 13: // 우금
+                        this.drawYuJin();
+                        break;
+                    case 14: // 장합
+                        this.drawYueJin();
+                        break;
+                    case 15: // 문추
+                        this.drawZhangHe();
+                        break;
+                    case 16: // 안량
+                        this.drawWenChou();
+                        break;
+                    case 17: // 안량
+                        this.drawYanLiang();
+                        break;
+                    // 촉(蜀)
+                    case 18: // 황충
+                        this.drawHuangZhong();
+                        break;
+                    case 19: // 마초
+                        this.drawMaChao();
+                        break;
+                    case 20: // 위연
+                        this.drawWeiYan();
+                        break;
+                    case 21: // 강유
+                        this.drawJiangWei();
+                        break;
+                    case 22: // 관평
+                        this.drawGuanPing();
+                        break;
+                    case 23: // 관흥
+                        this.drawGuanXing();
+                        break;
+                    case 24: // 장포
+                        this.drawZhangBao();
+                        break;
+                    case 25: // 마대
+                        this.drawMaDai();
+                        break;
+                    // 오(吳)
+                    case 26: // 손권
+                        this.drawSunQuan();
+                        break;
+                    case 27: // 주유
+                        this.drawZhuYu();
+                        break;
+                    case 28: // 감녕
+                        this.drawGanNing();
+                        break;
+                    case 29: // 태사자
+                        this.drawTaiShiCi();
+                        break;
+                    case 30: // 여몽
+                        this.drawLuMeng();
+                        break;
+                    case 31: // 육손
+                        this.drawLuXun();
+                        break;
+                    case 32: // 손책
+                        this.drawSunCe();
+                        break;
+                    case 33: // 주태
+                        this.drawZhouTai();
+                        break;
+                    case 34: // 정봉
+                        this.drawChengPu();
+                        break;
+                    case 35: // 황개
+                        this.drawHuangGai();
+                        break;
                     default:
                         this.drawDefaultHero();
                 }
@@ -3312,34 +4207,55 @@
                 ctx.fillStyle = '#ff0000';
                 ctx.fillRect(-10, 0, 20, 6);
                 
-                // 청룡언월도 (공격 애니메이션)
+                // 청룡언월도 (공격 애니메이션 - 칼질 모션 강화)
                 const attackProgress = this.attackAnimation > 0 ? 1 - (this.attackAnimation / 0.3) : 0;
-                const swordAngle = attackProgress * Math.PI * 0.6; // 60도 회전
-                const swordLength = 15 + attackProgress * 5; // 공격 시 길이 증가
+                const swordAngle = attackProgress * Math.PI * 0.9; // 90도 회전 (더 큰 스윙)
+                const swordLength = 15 + attackProgress * 6; // 공격 시 더 길어짐
+                
+                // 팔 움직임 (칼을 휘두르는 모션)
+                const armAngle = attackProgress * Math.PI * 0.7;
                 
                 ctx.save();
                 ctx.translate(-15, 5);
-                ctx.rotate(swordAngle);
+                ctx.rotate(armAngle); // 팔 회전
+                ctx.translate(0, 0);
+                ctx.rotate(swordAngle); // 칼 회전
+                
                 ctx.strokeStyle = '#8b4513';
-                ctx.lineWidth = 3;
+                ctx.lineWidth = 4;
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
                 ctx.lineTo(0, swordLength);
                 ctx.stroke();
                 ctx.fillStyle = '#ffd700';
                 ctx.beginPath();
-                ctx.arc(0, swordLength, 3, 0, Math.PI * 2);
+                ctx.arc(0, swordLength, 4, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // 검기 이펙트
-                if (attackProgress > 0.3 && attackProgress < 0.7) {
+                // 검기 이펙트 (더 강렬하게)
+                if (attackProgress > 0.2 && attackProgress < 0.8) {
                     ctx.strokeStyle = '#00ff00';
-                    ctx.lineWidth = 2;
-                    ctx.globalAlpha = 0.6;
+                    ctx.lineWidth = 3;
+                    ctx.globalAlpha = 0.7;
                     ctx.beginPath();
                     ctx.moveTo(0, 0);
-                    ctx.lineTo(0, swordLength + 5);
+                    ctx.lineTo(0, swordLength + 8);
                     ctx.stroke();
+                    
+                    // 검기 확장 이펙트
+                    if (attackProgress > 0.3 && attackProgress < 0.7) {
+                        ctx.strokeStyle = '#00ff00';
+                        ctx.lineWidth = 2;
+                        ctx.globalAlpha = 0.4;
+                        ctx.beginPath();
+                        ctx.moveTo(-3, 0);
+                        ctx.lineTo(-3, swordLength + 10);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(3, 0);
+                        ctx.lineTo(3, swordLength + 10);
+                        ctx.stroke();
+                    }
                     ctx.globalAlpha = 1.0;
                 }
                 ctx.restore();
@@ -3478,34 +4394,49 @@
                 ctx.fillStyle = '#ffd700';
                 ctx.fillRect(-11, 0, 22, 7);
                 
-                // 창 (공격 애니메이션)
+                // 창 (공격 애니메이션 - 더 강력한 모션)
                 const attackProgress = this.attackAnimation > 0 ? 1 - (this.attackAnimation / 0.3) : 0;
-                const spearAngle = attackProgress * Math.PI * 0.5; // 45도 회전
-                const spearLength = 15 + attackProgress * 3;
+                const spearAngle = attackProgress * Math.PI * 0.8; // 80도 회전 (더 큰 스윙)
+                const spearLength = 15 + attackProgress * 5; // 공격 시 더 길어짐
+                
+                // 팔 움직임 (창을 휘두르는 모션)
+                const armAngle = attackProgress * Math.PI * 0.6;
                 
                 ctx.save();
                 ctx.translate(-18, 8);
-                ctx.rotate(spearAngle);
+                ctx.rotate(armAngle); // 팔 회전
+                ctx.translate(0, 0);
+                ctx.rotate(spearAngle); // 창 회전
+                
                 ctx.strokeStyle = '#8b4513';
-                ctx.lineWidth = 3;
+                ctx.lineWidth = 4;
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
                 ctx.lineTo(0, spearLength);
                 ctx.stroke();
                 ctx.fillStyle = '#ffd700';
                 ctx.beginPath();
-                ctx.arc(0, spearLength, 3, 0, Math.PI * 2);
+                ctx.arc(0, spearLength, 4, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // 공격 이펙트
-                if (attackProgress > 0.3 && attackProgress < 0.7) {
+                // 공격 이펙트 (더 강렬하게)
+                if (attackProgress > 0.2 && attackProgress < 0.8) {
                     ctx.strokeStyle = '#ff0000';
-                    ctx.lineWidth = 2;
-                    ctx.globalAlpha = 0.7;
+                    ctx.lineWidth = 3;
+                    ctx.globalAlpha = 0.8;
                     ctx.beginPath();
                     ctx.moveTo(0, 0);
-                    ctx.lineTo(0, spearLength + 3);
+                    ctx.lineTo(0, spearLength + 5);
                     ctx.stroke();
+                    
+                    // 충격파 이펙트
+                    if (attackProgress > 0.4 && attackProgress < 0.7) {
+                        ctx.fillStyle = '#ff0000';
+                        ctx.globalAlpha = 0.3;
+                        ctx.beginPath();
+                        ctx.arc(0, spearLength + 3, 8, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
                     ctx.globalAlpha = 1.0;
                 }
                 ctx.restore();
@@ -3746,6 +4677,339 @@
                 ctx.arc(0, 0, 15, 0, Math.PI * 2);
                 ctx.fill();
             }
+            
+            // 위(魏) 일러스트들
+            drawCaoCao() {
+                ctx.fillStyle = '#8b4513';
+                ctx.beginPath();
+                ctx.arc(0, -15, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fdbcb4';
+                ctx.beginPath();
+                ctx.arc(0, -12, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#8b0000';
+                ctx.fillRect(-12, -2, 24, 20);
+                ctx.fillStyle = '#ffd700';
+                ctx.fillRect(-10, 0, 20, 6);
+            }
+            
+            drawXiahouDun() {
+                ctx.fillStyle = '#8b4513';
+                ctx.beginPath();
+                ctx.arc(0, -15, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fdbcb4';
+                ctx.beginPath();
+                ctx.arc(0, -12, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#dc143c';
+                ctx.fillRect(-12, -2, 24, 20);
+                ctx.strokeStyle = '#8b4513';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-15, 5);
+                ctx.lineTo(-25, 20);
+                ctx.stroke();
+            }
+            
+            drawZhangLiao() {
+                ctx.fillStyle = '#d2b48c';
+                ctx.beginPath();
+                ctx.arc(0, -15, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fdbcb4';
+                ctx.beginPath();
+                ctx.arc(0, -12, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#ff6347';
+                ctx.fillRect(-12, -2, 24, 20);
+                ctx.strokeStyle = '#8b4513';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-16, 5);
+                ctx.lineTo(-26, 22);
+                ctx.stroke();
+            }
+            
+            drawXuZhu() {
+                ctx.fillStyle = '#8b4513';
+                ctx.beginPath();
+                ctx.arc(0, -15, 13, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#654321';
+                ctx.beginPath();
+                ctx.arc(0, -12, 11, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#ff4500';
+                ctx.fillRect(-13, -2, 26, 22);
+                ctx.strokeStyle = '#8b4513';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(-18, 8);
+                ctx.lineTo(-28, 25);
+                ctx.stroke();
+            }
+            
+            // 촉(蜀) 일러스트들
+            drawHuangZhong() {
+                // 머리
+                ctx.fillStyle = '#d2b48c';
+                ctx.beginPath();
+                ctx.arc(0, -15, 12, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 얼굴
+                ctx.fillStyle = '#fdbcb4';
+                ctx.beginPath();
+                ctx.arc(0, -12, 10, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 눈
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(-3, -15, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(3, -15, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 수염
+                ctx.strokeStyle = '#d2b48c';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(-6, -5);
+                ctx.quadraticCurveTo(-8, 5, -6, 15);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(6, -5);
+                ctx.quadraticCurveTo(8, 5, 6, 15);
+                ctx.stroke();
+                
+                // 갑옷
+                ctx.fillStyle = '#ffa500';
+                ctx.fillRect(-12, -2, 24, 20);
+                ctx.fillStyle = '#ffd700';
+                ctx.fillRect(-10, 0, 20, 6);
+                
+                // 활 (공격 애니메이션)
+                const attackProgress = this.attackAnimation > 0 ? 1 - (this.attackAnimation / 0.3) : 0;
+                const bowAngle = this.attackAngle + (attackProgress > 0 ? Math.sin(attackProgress * Math.PI) * 0.2 : 0);
+                const drawProgress = attackProgress > 0.1 && attackProgress < 0.5 ? (attackProgress - 0.1) / 0.4 : 0;
+                
+                ctx.save();
+                ctx.translate(8, -2);
+                ctx.rotate(bowAngle);
+                
+                // 활 몸체
+                ctx.strokeStyle = '#8b4513';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(0, 0, 8, 0, Math.PI);
+                ctx.stroke();
+                
+                // 활시위 (당기는 모션)
+                if (drawProgress > 0) {
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(-8, 0);
+                    ctx.lineTo(-8 + drawProgress * 16, -drawProgress * 12);
+                    ctx.lineTo(8, 0);
+                    ctx.stroke();
+                    
+                    // 화살
+                    ctx.save();
+                    ctx.translate(-8 + drawProgress * 16, -drawProgress * 12);
+                    ctx.rotate(Math.atan2(-drawProgress * 12, drawProgress * 16));
+                    ctx.fillStyle = '#654321';
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(8, -1);
+                    ctx.lineTo(8, 1);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.fillStyle = '#ffd700';
+                    ctx.beginPath();
+                    ctx.arc(8, 0, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                } else {
+                    // 기본 활시위
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(-8, 0);
+                    ctx.lineTo(8, 0);
+                    ctx.stroke();
+                }
+                
+                ctx.restore();
+                
+                // 공격 시 화살 발사 이펙트
+                if (attackProgress > 0.5 && attackProgress < 0.8 && this.target) {
+                    const dx = this.target.x - this.x;
+                    const dy = this.target.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const arrowProgress = (attackProgress - 0.5) / 0.3;
+                    const arrowX = this.x + (dx / dist) * arrowProgress * Math.min(dist, this.range);
+                    const arrowY = this.y + (dy / dist) * arrowProgress * Math.min(dist, this.range);
+                    const arrowAngle = Math.atan2(dy, dx);
+                    
+                    ctx.save();
+                    ctx.translate(arrowX - this.x, arrowY - this.y);
+                    ctx.rotate(arrowAngle);
+                    ctx.fillStyle = '#654321';
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(6, -1);
+                    ctx.lineTo(6, 1);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.fillStyle = '#ffd700';
+                    ctx.beginPath();
+                    ctx.arc(6, 0, 1, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+            
+            drawMaChao() {
+                ctx.fillStyle = '#d2b48c';
+                ctx.beginPath();
+                ctx.arc(0, -15, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fdbcb4';
+                ctx.beginPath();
+                ctx.arc(0, -12, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#ff8c00';
+                ctx.fillRect(-12, -2, 24, 20);
+                ctx.strokeStyle = '#8b4513';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-16, 5);
+                ctx.lineTo(-26, 22);
+                ctx.stroke();
+            }
+            
+            drawWeiYan() {
+                ctx.fillStyle = '#8b4513';
+                ctx.beginPath();
+                ctx.arc(0, -15, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fdbcb4';
+                ctx.beginPath();
+                ctx.arc(0, -12, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#daa520';
+                ctx.fillRect(-12, -2, 24, 20);
+                ctx.strokeStyle = '#8b4513';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-15, 5);
+                ctx.lineTo(-25, 20);
+                ctx.stroke();
+            }
+            
+            // 오(吳) 일러스트들
+            drawSunQuan() {
+                ctx.fillStyle = '#d2b48c';
+                ctx.beginPath();
+                ctx.arc(0, -15, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fdbcb4';
+                ctx.beginPath();
+                ctx.arc(0, -12, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#4169e1';
+                ctx.fillRect(-12, -2, 24, 20);
+                ctx.fillStyle = '#ffd700';
+                ctx.fillRect(-10, 0, 20, 6);
+            }
+            
+            drawZhuYu() {
+                ctx.fillStyle = '#d2b48c';
+                ctx.beginPath();
+                ctx.arc(0, -15, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fdbcb4';
+                ctx.beginPath();
+                ctx.arc(0, -12, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#1e90ff';
+                ctx.fillRect(-12, -2, 24, 20);
+                ctx.fillStyle = '#ffd700';
+                ctx.beginPath();
+                ctx.moveTo(15, 5);
+                ctx.lineTo(22, 0);
+                ctx.lineTo(22, 10);
+                ctx.lineTo(15, 8);
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            drawGanNing() {
+                ctx.fillStyle = '#8b4513';
+                ctx.beginPath();
+                ctx.arc(0, -15, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fdbcb4';
+                ctx.beginPath();
+                ctx.arc(0, -12, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#00bfff';
+                ctx.fillRect(-12, -2, 24, 20);
+                ctx.strokeStyle = '#8b4513';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-15, 5);
+                ctx.lineTo(-25, 20);
+                ctx.stroke();
+            }
+            
+            drawTaiShiCi() {
+                ctx.fillStyle = '#d2b48c';
+                ctx.beginPath();
+                ctx.arc(0, -15, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fdbcb4';
+                ctx.beginPath();
+                ctx.arc(0, -12, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#87ceeb';
+                ctx.fillRect(-12, -2, 24, 20);
+                ctx.strokeStyle = '#8b4513';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(8, -2, 8, 0, Math.PI);
+                ctx.stroke();
+            }
+            
+            // 위(魏) 추가 일러스트들
+            drawXiahouYuan() { this.drawXiahouDun(); }
+            drawXuHuang() { this.drawZhangLiao(); }
+            drawXuChu() { this.drawXuZhu(); }
+            drawYuJin() { this.drawXiahouDun(); }
+            drawYueJin() { this.drawZhangLiao(); }
+            drawZhangHe() { this.drawXiahouDun(); }
+            drawWenChou() { this.drawXuZhu(); }
+            drawYanLiang() { this.drawXiahouDun(); }
+            
+            // 촉(蜀) 추가 일러스트들
+            drawJiangWei() { this.drawZhugeLiang(); }
+            drawGuanPing() { this.drawGuanYu(); }
+            drawGuanXing() { this.drawGuanYu(); }
+            drawZhangBao() { this.drawZhangFei(); }
+            drawMaDai() { this.drawMaChao(); }
+            
+            // 오(吳) 추가 일러스트들
+            drawLuMeng() { this.drawZhuYu(); }
+            drawLuXun() { this.drawZhugeLiang(); }
+            drawSunCe() { this.drawSunQuan(); }
+            drawZhouTai() { this.drawGanNing(); }
+            drawChengPu() { this.drawTaiShiCi(); }
+            drawHuangGai() { this.drawTaiShiCi(); }
         }
 
         // 유닛 클래스 (기존과 동일)
@@ -3786,14 +5050,8 @@
             }
             
             generatePath() {
-                // 현재 Canvas 크기에 맞춰 경로 생성
-                return [
-                    { x: 0, y: CANVAS_HEIGHT / 2 },
-                    { x: CANVAS_WIDTH / 3, y: CANVAS_HEIGHT / 2 },
-                    { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 3 },
-                    { x: CANVAS_WIDTH * 2 / 3, y: CANVAS_HEIGHT / 3 },
-                    { x: CANVAS_WIDTH, y: CANVAS_HEIGHT / 2 }
-                ];
+                // 현재 Canvas 크기에 맞춰 경로 생성 (getPathPoints 함수 사용)
+                return getPathPoints();
             }
             
             update(dt) {
@@ -4420,15 +5678,72 @@
             }
         }
 
-        // 경로 그리기
-        function drawPath() {
-            const pathPoints = [
+        // 경로 포인트 가져오기 (다른 함수에서도 사용)
+        function getPathPoints() {
+            return [
                 { x: 0, y: CANVAS_HEIGHT / 2 },
                 { x: CANVAS_WIDTH / 3, y: CANVAS_HEIGHT / 2 },
                 { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 3 },
                 { x: CANVAS_WIDTH * 2 / 3, y: CANVAS_HEIGHT / 3 },
                 { x: CANVAS_WIDTH, y: CANVAS_HEIGHT / 2 }
             ];
+        }
+        
+        // 경로와의 거리 계산 (점에서 선분까지의 최단 거리)
+        function distanceToLineSegment(point, lineStart, lineEnd) {
+            const A = point.x - lineStart.x;
+            const B = point.y - lineStart.y;
+            const C = lineEnd.x - lineStart.x;
+            const D = lineEnd.y - lineStart.y;
+            
+            const dot = A * C + B * D;
+            const lenSq = C * C + D * D;
+            let param = -1;
+            
+            if (lenSq !== 0) {
+                param = dot / lenSq;
+            }
+            
+            let xx, yy;
+            
+            if (param < 0) {
+                xx = lineStart.x;
+                yy = lineStart.y;
+            } else if (param > 1) {
+                xx = lineEnd.x;
+                yy = lineEnd.y;
+            } else {
+                xx = lineStart.x + param * C;
+                yy = lineStart.y + param * D;
+            }
+            
+            const dx = point.x - xx;
+            const dy = point.y - yy;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+        
+        // 경로 위에 있는지 확인 (경로 너비 고려)
+        function isOnPath(x, y, pathWidth = 40) {
+            const pathPoints = getPathPoints();
+            
+            for (let i = 0; i < pathPoints.length - 1; i++) {
+                const dist = distanceToLineSegment(
+                    { x, y },
+                    pathPoints[i],
+                    pathPoints[i + 1]
+                );
+                
+                if (dist < pathWidth) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        // 경로 그리기
+        function drawPath() {
+            const pathPoints = getPathPoints();
             
             ctx.strokeStyle = '#646464';
             ctx.lineWidth = Math.max(3, CANVAS_WIDTH / 240); // 반응형 선 두께
@@ -4657,6 +5972,29 @@
             const y = coords.y;
             
             if (placingHeroType !== null) {
+                // 같은 타입의 영웅이 이미 배치되어 있는지 확인
+                const existingHero = heroes.find(h => h.type === placingHeroType);
+                if (existingHero) {
+                    alert(`${HeroNames[placingHeroType]}은(는) 이미 배치되어 있습니다! 같은 영웅은 1개만 배치할 수 있습니다.`);
+                    return;
+                }
+                
+                // 경로 위에 있는지 확인
+                if (isOnPath(x, y)) {
+                    alert('몬스터가 지나가는 길 위에는 영웅을 배치할 수 없습니다!');
+                    return;
+                }
+                
+                // 다른 영웅과 겹치는지 확인
+                const minDistance = 50; // 최소 거리
+                for (const hero of heroes) {
+                    const dist = Math.sqrt((hero.x - x) ** 2 + (hero.y - y) ** 2);
+                    if (dist < minDistance) {
+                        alert('다른 영웅과 너무 가깝습니다!');
+                        return;
+                    }
+                }
+                
                 const totalCards = getTotalHeroCards(placingHeroType);
                 if (totalCards === 0 && (!heroStars[placingHeroType] || heroStars[placingHeroType] === 1)) {
                     alert('영웅 카드가 없습니다! 상점에서 소환하세요.');
@@ -4678,9 +6016,23 @@
             }
         });
         
+        // 모바일 스크롤 방지
+        document.addEventListener('touchmove', (e) => {
+            if (e.target === canvas || e.target.closest('#gameContainer')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        document.addEventListener('touchstart', (e) => {
+            if (e.target === canvas || e.target.closest('#gameContainer')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
         // 터치 이벤트 지원
         canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             if (gameState !== 'PLAYING') return;
             
             const coords = getCanvasCoordinates(e);
@@ -4688,6 +6040,29 @@
             const y = coords.y;
             
             if (placingHeroType !== null) {
+                // 같은 타입의 영웅이 이미 배치되어 있는지 확인
+                const existingHero = heroes.find(h => h.type === placingHeroType);
+                if (existingHero) {
+                    alert(`${HeroNames[placingHeroType]}은(는) 이미 배치되어 있습니다! 같은 영웅은 1개만 배치할 수 있습니다.`);
+                    return;
+                }
+                
+                // 경로 위에 있는지 확인
+                if (isOnPath(x, y)) {
+                    alert('몬스터가 지나가는 길 위에는 영웅을 배치할 수 없습니다!');
+                    return;
+                }
+                
+                // 다른 영웅과 겹치는지 확인
+                const minDistance = 50; // 최소 거리
+                for (const hero of heroes) {
+                    const dist = Math.sqrt((hero.x - x) ** 2 + (hero.y - y) ** 2);
+                    if (dist < minDistance) {
+                        alert('다른 영웅과 너무 가깝습니다!');
+                        return;
+                    }
+                }
+                
                 const totalCards = getTotalHeroCards(placingHeroType);
                 if (totalCards === 0 && (!heroStars[placingHeroType] || heroStars[placingHeroType] === 1)) {
                     alert('영웅 카드가 없습니다! 상점에서 소환하세요.');
@@ -4922,6 +6297,24 @@
         // 초기 영웅 카드 지급 (튜토리얼용)
         addHeroCard(HeroType.LIUBEI, HeroGrade.R);
         addHeroCard(HeroType.ZHANGFEI, HeroGrade.SR);
+        // 위(魏) 초기 영웅
+        addHeroCard(HeroType.XUZHU, HeroGrade.R);
+        addHeroCard(HeroType.XIAHOUDUN, HeroGrade.SR);
+        // 촉(蜀) 초기 영웅
+        addHeroCard(HeroType.WEIYAN, HeroGrade.R);
+        addHeroCard(HeroType.HUANGZHONG, HeroGrade.SR);
+        // 오(吳) 초기 영웅
+        addHeroCard(HeroType.CHENGPU, HeroGrade.R);
+        addHeroCard(HeroType.GANNING, HeroGrade.SR);
+        // 위(魏) 초기 영웅
+        addHeroCard(HeroType.XUZHU, HeroGrade.R);
+        addHeroCard(HeroType.XIAHOUDUN, HeroGrade.SR);
+        // 촉(蜀) 초기 영웅
+        addHeroCard(HeroType.WEIYAN, HeroGrade.R);
+        addHeroCard(HeroType.HUANGZHONG, HeroGrade.SR);
+        // 오(吳) 초기 영웅
+        addHeroCard(HeroType.CHENGPU, HeroGrade.R);
+        addHeroCard(HeroType.GANNING, HeroGrade.SR);
         updateHeroSelection();
 
         // 게임 시작
